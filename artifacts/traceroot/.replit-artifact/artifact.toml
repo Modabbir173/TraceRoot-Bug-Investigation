@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "TraceRoot"
+description = "A bug investigation and root-cause analysis workspace for engineering teams, with a React interface backed by a FastAPI service and temporary in-memory data."
+version = "1.0.0"
+id = "artifacts/traceroot"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18393
+
+[services.development]
+run = "pnpm --filter @workspace/traceroot run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/traceroot", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/traceroot/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18393"
+BASE_PATH = "/"
