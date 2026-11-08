@@ -6,4 +6,10 @@ requires-python = ">=3.13"
 dependencies = [
     "fastapi>=0.142.2",
     "uvicorn>=0.54.0",
+    "sqlalchemy>=2.1",
+    "psycopg[binary]>=3.3",
+    "pwdlib[argon2]>=0.2",
+    "PyJWT>=2.10",
+    "email-validator>=2.2",
+    "python-dotenv>=1.1",
 ]

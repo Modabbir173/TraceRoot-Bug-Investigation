@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta, timezone
-
 from models import Activity, Issue, IssueSeverity, IssueStatus
 
 now = datetime.now(timezone.utc)

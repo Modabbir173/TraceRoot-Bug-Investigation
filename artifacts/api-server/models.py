@@ -1,14 +1,11 @@
 from datetime import datetime
 from enum import StrEnum
-
 from pydantic import BaseModel, ConfigDict, Field
-
 
 class IssueStatus(StrEnum):
     OPEN = "open"
     INVESTIGATING = "investigating"
     RESOLVED = "resolved"
-
 
 class IssueSeverity(StrEnum):
     CRITICAL = "critical"
@@ -16,10 +13,8 @@ class IssueSeverity(StrEnum):
     MEDIUM = "medium"
     LOW = "low"
 
-
 class Issue(BaseModel):
     model_config = ConfigDict(use_enum_values=True)
-
     id: str
     title: str
     description: str
@@ -28,9 +23,9 @@ class Issue(BaseModel):
     severity: IssueSeverity
     status: IssueStatus
     assignee: str | None = None
+    project_id: str | None = None
     created_at: datetime
     updated_at: datetime
-
 
 class IssueInput(BaseModel):
     model_config = ConfigDict(extra="forbid", use_enum_values=True)
@@ -42,6 +37,7 @@ class IssueInput(BaseModel):
     severity: IssueSeverity
     status: IssueStatus = IssueStatus.OPEN
     assignee: str | None = None
+    project_id: str | None = None
 
 
 class IssueUpdate(BaseModel):
@@ -54,6 +50,7 @@ class IssueUpdate(BaseModel):
     severity: IssueSeverity | None = None
     status: IssueStatus | None = None
     assignee: str | None = None
+    project_id: str | None = None
 
 
 class Activity(BaseModel):
