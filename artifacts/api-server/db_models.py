@@ -36,7 +36,7 @@ class User(Base):
         DateTime(timezone=True), default=current_time, nullable=False
     )
 
-    projects: Mapped[list["Project"]] = relationship(
+    projects: Mapped[list["Projects"]] = relationship(
         back_populates="owner",
         cascade="all, delete-orphan",
     )
@@ -120,7 +120,7 @@ class IssueRecord(Base):
 
     owner: Mapped["User"] = relationship(back_populates="issues")
 
-    project: Mapped["Project | None"] = relationship(
+    project: Mapped["Projects | None"] = relationship(
         back_populates="issues"
     )
 

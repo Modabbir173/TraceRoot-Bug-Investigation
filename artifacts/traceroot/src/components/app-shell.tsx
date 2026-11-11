@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { Activity, ArrowUpRight, Bug, CircleDot, Command, LayoutDashboard, ListFilter, Search } from 'lucide-react';
+import { Activity, LogOut, Bug, CircleDot, LayoutDashboard, ListFilter, Search, FolderKanban, Settings } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
+import { useAuth } from '@/lib/auth-context';
 import { getHealthCheckQueryKey, useHealthCheck } from '@workspace/api-client-react';
 
 type NoticeContextValue = (message: string) => void;
@@ -17,14 +18,30 @@ function NavigationLinks() {
       <Link href="/" className={`nav-link ${location === '/' ? 'active' : ''}`} data-testid="link-dashboard">
         <LayoutDashboard size={17} /> Overview
       </Link>
+      <Link
+  href="/projects"
+  className={`nav-link ${location.startsWith('/projects') ? 'active' : ''}`}
+  data-testid="link-projects"
+>
+  <FolderKanban size={17} /> Projects
+</Link>
       <Link href="/issues" className={`nav-link ${location.startsWith('/issues') ? 'active' : ''}`} data-testid="link-issues">
         <Bug size={17} /> Issues
       </Link>
+        <Link
+            href="/settings"
+            className={`nav-link ${location.startsWith('/settings') ? 'active' : ''}`}
+            data-testid="link-settings"
+        >
+            <Settings size={17} /> Settings
+        </Link>
     </>
   );
 }
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const { user, signOut } = useAuth();
+  const [, setLocation] = useLocation();
   const health = useHealthCheck({ query: { queryKey: getHealthCheckQueryKey(), staleTime: 30_000 } });
   const [notice, setNotice] = useState('');
   useEffect(() => {
@@ -38,9 +55,27 @@ export function AppShell({ children }: { children: ReactNode }) {
       <div className="app-shell">
         <aside className="sidebar">
           <Link href="/" className="brand" data-testid="link-brand">
-            <span className="brand-mark"><Command size={18} strokeWidth={2.5} /></span>
-            <span className="brand-name">trace<span>root</span></span>
-          </Link>
+  <span className="brand-mark">
+    <svg viewBox="0 0 40 40" width="26" height="26" fill="none">
+  {/* Custom T */}
+  <path
+    d="M4 9H19L16 13H13.5V31H9V13H4V9Z"
+    fill="currentColor"
+  />
+
+  {/* Custom R */}
+  <path
+    d="M21 9H29C33.5 9 36 11.8 36 16C36 19 34.5 21 32 22.2L37 31H31.5L27 23H25.5V31H21V9Z"
+    fill="currentColor"
+  />
+  <path
+    d="M25.5 13.5V18.8H29C30.8 18.8 31.5 17.9 31.5 16.2C31.5 14.5 30.7 13.5 29 13.5H25.5Z"
+    fill="#142D46"
+  />
+</svg>
+  </span>
+  <span className="brand-name">TraceRoot</span>
+</Link>
           <p className="nav-caption">Workspace</p>
           <nav className="nav-stack"><NavigationLinks /></nav>
           <nav className="mobile-menu" aria-label="Primary navigation"><NavigationLinks /></nav>
@@ -51,10 +86,33 @@ export function AppShell({ children }: { children: ReactNode }) {
               <CircleDot size={13} style={{ marginLeft: 'auto', opacity: 0.55 }} />
             </div>
             <div className="side-user">
-              <span className="avatar-initial">TR</span>
-              <div><div className="user-name">TraceRoot workspace</div><div className="user-role">Engineering team</div></div>
-              <ArrowUpRight size={14} style={{ marginLeft: 'auto', color: '#82929a' }} />
-            </div>
+  <span className="avatar-initial">
+    {user?.full_name
+      .split(' ')
+      .map((part) => part[0])
+      .slice(0, 2)
+      .join('')
+      .toUpperCase()}
+  </span>
+
+  <div style={{ minWidth: 0, flex: 1 }}>
+    <div className="user-name">{user?.full_name}</div>
+    <div className="user-role">{user?.email}</div>
+  </div>
+
+  <button
+    type="button"
+    onClick={() => {
+      signOut();
+      setLocation('/login');
+    }}
+    title="Sign out"
+    aria-label="Sign out"
+    className="button-quiet"
+  >
+    <LogOut size={16} />
+  </button>
+</div>
           </div>
         </aside>
         <main className="main-panel">

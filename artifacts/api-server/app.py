@@ -54,7 +54,7 @@ def get_owned_project(
     if project is None:
         raise HTTPException(
             status_code=404,
-            detail="Project not found",
+            detail="Projects not found",
         )
 
     return project

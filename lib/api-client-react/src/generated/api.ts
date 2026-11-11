@@ -213,12 +213,6 @@ export function useListIssues<TData = Awaited<ReturnType<typeof listIssues>>, TE
   return withQueryKey(query, queryOptions.queryKey);
 }
 
-
-
-
-
-
-
 export const getCreateIssueUrl = () => {
 
 
@@ -255,10 +249,6 @@ return customFetch<Issue>(getCreateIssueUrl(),
   }
 );}
 
-
-
-
-
 export const getCreateIssueMutationKey = () => ['createIssue'] as const;
 
 export const getCreateIssueMutationOptions = <TError = ErrorType<unknown>,
@@ -280,10 +270,6 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
           return  createIssue(data,requestOptions)
         }
-
-
-
-
 
 
   return  { mutationFn, ...mutationOptions }}
@@ -328,9 +314,6 @@ export const getIssue = async (issueId: string, options?: Parameters<typeof cust
 
   }
 );}
-
-
-
 
 
 export const getGetIssueQueryKey = (issueId: string,) => {

@@ -28,7 +28,7 @@ def create_project(
     )
 
     if not project.name:
-        raise HTTPException(status_code=422, detail="Project name cannot be empty")
+        raise HTTPException(status_code=422, detail="Projects name cannot be empty")
 
     db.add(project)
     db.commit()
@@ -65,7 +65,7 @@ def get_project(
     )
 
     if project is None:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise HTTPException(status_code=404, detail="Projects not found")
 
     return project
 
@@ -85,7 +85,7 @@ def update_project(
     )
 
     if project is None:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise HTTPException(status_code=404, detail="Projects not found")
 
     changes = payload.model_dump(exclude_unset=True)
 
@@ -98,7 +98,7 @@ def update_project(
         if not new_name:
             raise HTTPException(
                 status_code=422,
-                detail="Project name cannot be empty",
+                detail="Projects name cannot be empty",
             )
 
         project.name = new_name
@@ -126,7 +126,7 @@ def delete_project(
     )
 
     if project is None:
-        raise HTTPException(status_code=404, detail="Project not found")
+        raise HTTPException(status_code=404, detail="Projects not found")
 
     db.delete(project)
     db.commit()
