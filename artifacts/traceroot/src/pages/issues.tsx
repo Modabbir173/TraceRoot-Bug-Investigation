@@ -69,6 +69,10 @@ export default function Issues() {
 
   const issues = useListIssues(params);
   const createIssue = useCreateIssue();
+  const projectNameById = useMemo(
+    () => new Map(projects.map((project) => [project.id, project.name])),
+    [projects],
+      );
 
   useEffect(() => {
     let active = true;
@@ -218,8 +222,17 @@ export default function Issues() {
       </div>
 
       <section className="panel">
-        <div className="table-header">
+        <div
+            className="table-header"
+            style={{
+              display: 'grid',
+              gridTemplateColumns:
+                  'minmax(180px, 2fr) minmax(120px, 1fr) minmax(80px, 0.7fr) minmax(90px, 0.8fr) minmax(100px, 1fr)',
+              gap: 12,
+            }}
+        >
           <span>Issue / Service</span>
+          <span>Project</span>
           <span>Severity</span>
           <span>Status</span>
           <span>Owner</span>
@@ -234,9 +247,22 @@ export default function Issues() {
           />
         ) : issues.data?.length ? (
           <div className="issue-list">
-            {issues.data.map((issue) => (
-              <IssueRow key={issue.id} issue={issue} />
-            ))}
+            {issues.data.map((issue) => {
+              const projectId = (
+                  issue as typeof issue & { project_id?: string | null }
+              ).project_id;
+              return (
+                  <IssueRow
+                      key={issue.id}
+                      issue={issue}
+                      projectName={
+                    projectId
+                        ? projectNameById.get(projectId) || 'Unknown project'
+                        : 'Unassigned'
+                  }
+                  />
+              );
+            })}
           </div>
         ) : (
           <EmptyState

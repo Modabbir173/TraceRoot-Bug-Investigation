@@ -1,4 +1,3 @@
-
 import uuid
 from datetime import datetime, timezone
 
@@ -36,7 +35,7 @@ class User(Base):
         DateTime(timezone=True), default=current_time, nullable=False
     )
 
-    projects: Mapped[list["Projects"]] = relationship(
+    projects: Mapped[list["Project"]] = relationship(
         back_populates="owner",
         cascade="all, delete-orphan",
     )
@@ -120,7 +119,7 @@ class IssueRecord(Base):
 
     owner: Mapped["User"] = relationship(back_populates="issues")
 
-    project: Mapped["Projects | None"] = relationship(
+    project: Mapped["Project | None"] = relationship(
         back_populates="issues"
     )
 

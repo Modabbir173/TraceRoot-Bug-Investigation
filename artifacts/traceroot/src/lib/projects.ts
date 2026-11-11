@@ -92,3 +92,38 @@ export function deleteProject(projectId: string): Promise<void> {
     'DELETE',
   );
 }
+export interface ProjectIssue {
+  id: string;
+  title: string;
+  service: string;
+  severity: string;
+  status: string;
+  updated_at: string;
+  project_id?: string | null;
+}
+
+export async function listProjectIssues(
+  projectId: string,
+): Promise<ProjectIssue[]> {
+  const token = localStorage.getItem(TOKEN_KEY);
+  const params = new URLSearchParams({ project_id: projectId });
+
+  const response = await fetch(`/api/issues?${params.toString()}`, {
+    method: 'GET',
+    headers: {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+
+  const data = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new Error(
+      typeof data?.detail === 'string'
+        ? data.detail
+        : 'Could not load associated issues.',
+    );
+  }
+
+  return data as ProjectIssue[];
+}
