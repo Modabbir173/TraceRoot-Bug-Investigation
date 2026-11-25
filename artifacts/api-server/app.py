@@ -329,8 +329,31 @@ def delete_issue(
 ):
     issue = get_owned_issue(issue_id, current_user.id, db)
 
+    # Collect evidence file paths before deleting database records.
+    evidence_paths = [
+        Path(evidence.storage_path)
+        for evidence in issue.evidence_files
+    ]
+
+    # Delete issue and related database records.
     db.delete(issue)
     db.commit()
+
+    # Remove physical evidence files safely.
+    evidence_root = EVIDENCE_DIR.resolve()
+
+    for file_path in evidence_paths:
+        try:
+            resolved_path = file_path.resolve()
+
+            if (
+                resolved_path != evidence_root
+                and resolved_path.is_relative_to(evidence_root)
+            ):
+                resolved_path.unlink(missing_ok=True)
+
+        except OSError:
+            pass
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
