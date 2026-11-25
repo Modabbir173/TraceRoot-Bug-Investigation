@@ -18,6 +18,7 @@ class Issue(BaseModel):
     id: str
     title: str
     description: str
+    reproduction_steps: str = ""
     service: str
     environment: str
     severity: IssueSeverity
@@ -32,6 +33,7 @@ class IssueInput(BaseModel):
 
     title: str = Field(min_length=3)
     description: str = Field(min_length=3)
+    reproduction_steps: str = Field(default="", max_length=10000)
     service: str = Field(min_length=1)
     environment: str = Field(min_length=1)
     severity: IssueSeverity
@@ -45,6 +47,10 @@ class IssueUpdate(BaseModel):
 
     title: str | None = Field(default=None, min_length=3)
     description: str | None = Field(default=None, min_length=3)
+    reproduction_steps: str | None = Field(
+        default=None,
+        max_length=10000
+    )
     service: str | None = Field(default=None, min_length=1)
     environment: str | None = Field(default=None, min_length=1)
     severity: IssueSeverity | None = None
